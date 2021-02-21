@@ -7,16 +7,19 @@ const web3 = new Web3(ganache.provider());
 const { interface, bytecode } = require("../compile");
 
 let accounts;
-let inobx;
+let inbox;
 
 beforeEach(async () => {
   // Get a list of all accounts
   accounts = await web3.eth.getAccounts();
+  // Accessing the ethereum module, specifically the Contract property
   inbox = await new web3.eth.Contract(JSON.parse(interface))
     .deploy({
       data: bytecode,
+      // Arguments of the Inbox contructor
       arguments: ["Hello Minion"],
     })
+    // Trigger the contract itself
     .send({ from: accounts[0], gas: 1000000 });
 });
 
