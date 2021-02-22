@@ -8,6 +8,7 @@ const { interface, bytecode } = require("../compile");
 
 let accounts;
 let inbox;
+const INITIAL_STRING = "Hello Minion";
 
 beforeEach(async () => {
   // Get a list of all accounts
@@ -17,7 +18,7 @@ beforeEach(async () => {
     .deploy({
       data: bytecode,
       // Arguments of the Inbox contructor
-      arguments: ["Hello Minion"],
+      arguments: [INITIAL_STRING],
     })
     // Trigger the contract itself
     .send({ from: accounts[0], gas: 1000000 });
@@ -26,5 +27,9 @@ beforeEach(async () => {
 describe("Inbox", () => {
   it("deploys a contract", () => {
     assert.ok(inbox.options.address);
+  });
+  it("has a default message", async () => {
+    const message = await inbox.methods.message().call();
+    assert.strictEqual(message, INITIAL_STRING);
   });
 });
